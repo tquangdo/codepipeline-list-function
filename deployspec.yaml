@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+       golang: 1.x
+  pre_build:
+    commands:
+      - go get
+  build:
+    commands:
+      - aws lambda publish-version --function-name books_list > res.json
+      - export VERSION=$(jq -r '.Version' res.json)
+      - aws lambda update-alias --function-name books_list --function-version $VERSION --name production
