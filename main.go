@@ -17,11 +17,7 @@ type Book struct {
 	Id     string `json:"id"`
 	Name   string `json:"name"`
 	Author string `json:"author"`
-}
-
-type Res struct {
-	Rows  []Book `json:"rows"`
-	Total int    `json:"total"`
+	Image  string `json:"image"`
 }
 
 func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -53,15 +49,14 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 		}, nil
 	}
 
-	total := len(books)
-	res := Res{Rows: books, Total: total}
-	r, _ := json.Marshal(res)
+	res, _ := json.Marshal(books)
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "application/json",
+			"Content-Type":                "application/json",
+			"Access-Control-Allow-Origin": "*",
 		},
-		Body: string(r),
+		Body: string(res),
 	}, nil
 }
 
